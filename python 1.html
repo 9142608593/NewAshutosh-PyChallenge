@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>PyType Explorer | Python Data Types</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--text:#edf4ff;--muted:#9aabc4;--line:#263650;--cyan:#62d6f5;--purple:#b69cff;--green:#6ee7b7;--yellow:#f8d477;--pink:#ff9fc8;--red:#ff8585}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 85% 0%,#1b2c4a 0,transparent 32%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}.wrap{width:min(1120px,92%);margin:auto}.topbar{position:sticky;top:0;z-index:10;background:#0b1220eF;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}.brand{font-weight:850;letter-spacing:-.5px;font-size:1.12rem}.brand span{color:var(--cyan)}.navlinks{display:flex;gap:18px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}.navlinks a:hover{color:var(--cyan)}
+.hero{padding:68px 0 44px;display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #31506a;background:#12283a;padding:6px 12px;border-radius:99px;color:var(--cyan);font-size:.8rem;font-weight:700}.hero h1{font-size:clamp(2.4rem,6vw,4.7rem);line-height:1.04;letter-spacing:-2px;margin:18px 0}.gradient{background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:1.08rem;color:var(--muted);max-width:620px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer;background:linear-gradient(110deg,#61d6f4,#9b9bff);color:#081321;box-shadow:0 8px 25px #4ac5eb25}.btn.secondary{background:#1a2940;color:var(--text);border:1px solid var(--line);box-shadow:none}.btn:hover{transform:translateY(-1px)}.hero-card{background:linear-gradient(145deg,#1b2c46,#111b2d);border:1px solid #30435f;border-radius:24px;padding:24px;box-shadow:0 24px 70px #0005}.code-mini{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#0a1322;border:1px solid #293b56;padding:18px;border-radius:14px;color:#d8e8ff;font-size:.93rem;overflow:auto}.code-mini .comment{color:#7892b2}.code-mini .kw{color:#c6a8ff}.code-mini .str{color:#9ee6bd}.hero-stats{display:flex;gap:12px;margin-top:16px}.stat{flex:1;background:#ffffff08;border:1px solid #ffffff12;border-radius:12px;padding:12px}.stat b{display:block;font-size:1.25rem;color:var(--cyan)}.stat small{color:var(--muted)}
+section{padding:42px 0}.section-head{margin-bottom:22px}.kicker{color:var(--cyan);font-size:.78rem;font-weight:850;letter-spacing:1.4px;text-transform:uppercase}.section-head h2{font-size:clamp(1.7rem,4vw,2.45rem);margin:5px 0 6px;letter-spacing:-.7px}.section-head p{color:var(--muted);margin:0;max-width:720px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.type-card{min-height:178px;perspective:1000px;cursor:pointer;outline:none}.flip-inner{position:relative;min-height:178px;transition:transform .55s;transform-style:preserve-3d}.type-card.flipped .flip-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;border:1px solid var(--line);border-radius:18px;padding:19px;background:linear-gradient(145deg,#17263d,#111b2c);backface-visibility:hidden;display:flex;flex-direction:column;justify-content:space-between}.face.back{transform:rotateY(180deg);background:#17263d}.type-top{display:flex;justify-content:space-between;align-items:center}.type-symbol{width:45px;height:45px;display:grid;place-items:center;border-radius:13px;font-weight:900;font-size:1.2rem;background:#62d6f51a;color:var(--cyan)}.type-card:nth-child(2) .type-symbol{background:#b69cff20;color:var(--purple)}.type-card:nth-child(3) .type-symbol{background:#6ee7b720;color:var(--green)}.type-card:nth-child(4) .type-symbol{background:#f8d47720;color:var(--yellow)}.type-card:nth-child(5) .type-symbol{background:#ff9fc820;color:var(--pink)}.type-card:nth-child(6) .type-symbol{background:#ffb47720;color:#ffb477}.type-name{font-size:1.2rem;font-weight:850;margin:12px 0 2px}.example{font-family:ui-monospace,monospace;color:var(--cyan);font-size:1.05rem}.hint{font-size:.8rem;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{background:linear-gradient(145deg,#152239,#101a2b);border:1px solid var(--line);border-radius:20px;padding:22px}.panel h3{margin:0 0 5px;font-size:1.18rem}.panel>p{color:var(--muted);margin:0 0 16px;font-size:.92rem}.field{display:flex;gap:9px;flex-wrap:wrap}.input{flex:1;min-width:150px;background:#0a1424;border:1px solid #354966;color:var(--text);border-radius:11px;padding:12px 13px;font:inherit;outline:none}.input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #62d6f51c}.result{margin-top:14px;background:#0a1424;border:1px solid #263a55;border-radius:12px;padding:14px;min-height:70px;color:var(--muted)}.result strong{color:var(--green)}.result code{color:var(--cyan)}.quick{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.chip{border:1px solid #344863;background:#1a2a42;color:#dce9fa;border-radius:99px;padding:6px 10px;cursor:pointer;font-size:.82rem}.chip:hover{border-color:var(--cyan)}
+.codebox{background:#08111e;border:1px solid #2b3e59;border-radius:13px;padding:14px;font: .9rem/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto;white-space:pre}.line{display:block;padding:0 8px;border-radius:5px;color:#b9c9df}.line.active{background:#19344b;color:#fff;box-shadow:inset 3px 0 var(--cyan)}.line .comment{color:#7892b2}.sim-controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.sim-controls .btn{padding:10px 14px}.sim-controls .secondary{background:#1b2b43}.speed{display:flex;align-items:center;gap:10px;margin-top:15px;color:var(--muted);font-size:.88rem}.speed input{flex:1;accent-color:var(--cyan)}.step-indicator{color:var(--cyan);font-size:.82rem;font-weight:800;margin-bottom:8px}.console{background:#07101c;border:1px solid #2a3c55;border-radius:12px;padding:13px;margin-top:13px;min-height:72px;font-family:ui-monospace,monospace;color:#a8f0c9;white-space:pre-wrap}
+.conversion{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}.conversion .arrow{font-size:1.6rem;color:var(--cyan)}.select{width:100%;margin-top:7px;background:#0a1424;color:var(--text);border:1px solid #354966;border-radius:10px;padding:11px;font:inherit}
+.quiz-q{font-weight:750;margin:12px 0}.options{display:grid;gap:8px}.option{background:#0c1727;border:1px solid #2c3e58;color:var(--text);text-align:left;padding:11px 13px;border-radius:10px;cursor:pointer}.option:hover{border-color:var(--cyan)}.option.correct{border-color:var(--green);background:#123127}.option.wrong{border-color:var(--red);background:#351e29}.feedback{color:var(--muted);min-height:28px;margin-top:10px;font-size:.9rem}
+.footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:.86rem}.footer strong{color:var(--text)}
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:46px}.grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.navlinks{gap:10px;font-size:.78rem}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}.hero h1{letter-spacing:-1.3px}.panel{padding:17px}.conversion{grid-template-columns:1fr}.conversion .arrow{transform:rotate(90deg);text-align:center}}
+
+/* v3-extra-features */
+:root{--v3-accent:#62d6f5}
+body.light-mode{--bg:#f3f7fc;--panel:#fff;--panel2:#edf3fa;--text:#152238;--muted:#53657e;--line:#d5dfeb;background:radial-gradient(circle at 85% 0%,#dbeeff 0,transparent 34%),var(--bg)}
+body.light-mode .topbar{background:#f3f7fced}
+body.light-mode .hero-card,body.light-mode .panel,body.light-mode .face{background:linear-gradient(145deg,#fff,#edf3fa);border-color:var(--line)}
+body.light-mode .code-mini,body.light-mode .codebox,body.light-mode .console,body.light-mode .result,body.light-mode .input,body.light-mode .select,body.light-mode .option{background:#f7faff;color:#18263a;border-color:#cbd8e7}
+body.light-mode .stat{background:#edf3fa;border-color:#d5dfeb}
+body.light-mode .chip{background:#edf3fa;color:#24364d;border-color:#cbd8e7}
+.v3-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.v3-output{white-space:pre-wrap;overflow-wrap:anywhere;min-height:80px}
+.v3-memory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.v3-memory-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#0a1424}
+body.light-mode .v3-memory-card{background:#f7faff}
+.v3-memory-card b{color:var(--cyan)}
+.v3-tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:3px 9px;color:var(--cyan);font-size:.76rem}
+.v3-progress{height:10px;border-radius:99px;background:#263650;overflow:hidden;margin:8px 0}
+.v3-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .3s}
+.v3-flash{min-height:145px;display:grid;place-items:center;text-align:center;border:1px solid var(--line);border-radius:16px;padding:20px;background:linear-gradient(145deg,#17263d,#111b2c);cursor:pointer}
+body.light-mode .v3-flash{background:linear-gradient(145deg,#fff,#edf3fa)}
+.v3-flash strong{font-size:1.35rem}
+.v3-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.v3-small{font-size:.82rem;color:var(--muted)}
+@media(max-width:700px){.v3-grid{grid-template-columns:1fr}.v3-memory{grid-template-columns:1fr}}
+
+
+/* V3.1: centred navigation in a single responsive box */
+.nav{flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:15px 0 17px}
+.brand{font-size:1.35rem;text-align:center}
+.navlinks{width:fit-content;max-width:100%;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;border:1px solid #354966;border-radius:18px;background:linear-gradient(145deg,#17263d,#101a2b);box-shadow:0 8px 24px #0002;color:var(--muted)}
+.navlinks a{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:11px;white-space:nowrap;transition:background .2s,color .2s}
+.navlinks a:hover,.navlinks a:focus-visible{background:#62d6f51c;color:var(--cyan);outline:none}
+.navlinks .chip{margin:0;padding:8px 13px;white-space:nowrap;border-radius:11px;font:inherit}
+body.light-mode .navlinks{background:linear-gradient(145deg,#fff,#edf3fa);border-color:#cbd8e7;box-shadow:0 8px 24px #19304a12}
+body.light-mode .navlinks a{color:#53657e}
+body.light-mode .navlinks a:hover,body.light-mode .navlinks a:focus-visible{color:#087eaa;background:#dff5fc}
+@media(max-width:600px){.nav{gap:10px;padding:13px 0 15px}.navlinks{width:100%;gap:5px;padding:8px; border-radius:16px}.navlinks a{padding:8px 9px;font-size:.84rem}.navlinks .chip{padding:8px 10px;font-size:.84rem}}
+@media(max-width:380px){.navlinks{gap:3px}.navlinks a{padding:7px 7px;font-size:.78rem}.navlinks .chip{font-size:.78rem;padding:7px 8px}}
+
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap nav">
+  <a class="brand" href="#home">PyType<span>Explorer</span></a>
+  <nav class="navlinks" aria-label="Main navigation"><a href="#types">Data types</a><a href="#detector">Type detector</a><a href="#playground">Playground</a><a href="#quiz">Quiz</a><button class="chip" id="themeToggle" type="button">☀ Light mode</button></nav>
+</div></header>
+<main>
+<section class="wrap hero" id="home">
+  <div>
+    <span class="eyebrow">✦ BEGINNER-FRIENDLY PYTHON LEARNING</span>
+    <h1>Explore the world of <span class="gradient">Python Data Types</span></h1>
+    <p>Every value in Python has a type. Learn how Python understands numbers, text, logical values and collections — by clicking, experimenting, visualising memory and playing.</p>
+    <div class="actions"><a class="btn" href="#types">Explore data types ↓</a><a class="btn secondary" href="#detector">Try the type detector</a></div>
+  </div>
+  <div class="hero-card">
+    <div class="code-mini"><span class="comment"># Python can identify a value's type</span><br><span class="kw">name</span> = <span class="str">"Python"</span><br><span class="kw">version</span> = 3.12<br><span class="kw">is_fun</span> = True<br><br>print(type(name))<br><span class="comment"># &lt;class 'str'&gt;</span></div>
+    <div class="hero-stats"><div class="stat"><b>6</b><small>types to explore</small></div><div class="stat"><b>3</b><small>interactive labs</small></div><div class="stat"><b>1</b><small>fun quiz</small></div></div>
+  </div>
+</section>
+
+<section class="wrap" id="types">
+  <div class="section-head"><div class="kicker">01 / Explore</div><h2>Meet the six data types</h2><p>Select any card to flip it and learn what the type means. These examples introduce the types covered in this explorer.</p></div>
+  <div class="grid" id="typeGrid">
+    <article class="type-card" tabindex="0"><div class="flip-inner"><div class="face"><div class="type-top"><div class="type-symbol">#</div><span class="hint">CLICK TO FLIP ↻</span></div><div><div class="type-name">Integer <span class="hint">(int)</span></div><div class="example">42</div></div><div class="hint">Whole numbers without a decimal point</div></div><div class="face back"><div class="type-name">Integer (int)</div><p>Used for whole numbers, such as 0, 7 or -12.</p><div class="example">type(42) → int</div></div></div></article>
+    <article class="type-card" tabindex="0"><div class="flip-inner"><div class="face"><div class="type-top"><div class="type-symbol">.0</div><span class="hint">CLICK TO FLIP ↻</span></div><div><div class="type-name">Float</div><div class="example">3.14</div></div><div class="hint">Numbers with a decimal point</div></div><div class="face back"><div class="type-name">Float</div><p>Used for numbers with a fractional or decimal part.</p><div class="example">type(3.14) → float</div></div></div></article>
+    <article class="type-card" tabindex="0"><div class="flip-inner"><div class="face"><div class="type-top"><div class="type-symbol">Aa</div><span class="hint">CLICK TO FLIP ↻</span></div><div><div class="type-name">String <span class="hint">(str)</span></div><div class="example">"Hello"</div></div><div class="hint">Text written inside quotes</div></div><div class="face back"><div class="type-name">String (str)</div><p>Stores text. Strings are written inside single or double quotes.</p><div class="example">type("Hello") → str</div></div></div></article>
+    <article class="type-card" tabindex="0"><div class="flip-inner"><div class="face"><div class="type-top"><div class="type-symbol">✓</div><span class="hint">CLICK TO FLIP ↻</span></div><div><div class="type-name">Boolean <span class="hint">(bool)</span></div><div class="example">True</div></div><div class="hint">Only True or False</div></div><div class="face back"><div class="type-name">Boolean (bool)</div><p>Represents a logical value. Python uses True and False, with capital first letters.</p><div class="example">type(False) → bool</div></div></div></article>
+    <article class="type-card" tabindex="0"><div class="flip-inner"><div class="face"><div class="type-top"><div class="type-symbol">∅</div><span class="hint">CLICK TO FLIP ↻</span></div><div><div class="type-name">NoneType</div><div class="example">None</div></div><div class="hint">Represents the absence of a value</div></div><div class="face back"><div class="type-name">NoneType</div><p>Python's special None value means no value is currently present.</p><div class="example">type(None) → NoneType</div></div></div></article>
+    <article class="type-card" tabindex="0"><div class="flip-inner"><div class="face"><div class="type-top"><div class="type-symbol">[ ]</div><span class="hint">CLICK TO FLIP ↻</span></div><div><div class="type-name">List <span class="hint">(list)</span></div><div class="example">[1, 2, 3]</div></div><div class="hint">An ordered, changeable collection</div></div><div class="face back"><div class="type-name">List (list)</div><p>A list stores multiple items in order. You can change it after creating it.</p><div class="example">type([1, 2]) → list</div></div></div></article>
+  </div>
+</section>
+
+<section class="wrap" id="detector">
+  <div class="section-head"><div class="kicker">02 / Experiment</div><h2>Interactive type detector</h2><p>Enter a Python-style value and see which type it represents. Use the examples to get started.</p></div>
+  <div class="two-col">
+    <div class="panel"><h3>🔎 Enter a value</h3><p>Examples: 25, 3.14, "hello", True, None, [1, 2]</p>
+      <div class="field"><input class="input" id="detectInput" value="42" aria-label="Python value" placeholder="Enter a value, e.g. Hello or 42"><button class="btn" id="detectBtn">Detect type</button></div>
+      <div class="quick"><button class="chip" data-value="42">42</button><button class="chip" data-value="3.14">3.14</button><button class="chip" data-value="Hello">Hello</button><button class="chip" data-value='"Hello"'>"Hello"</button><button class="chip" data-value="True">True</button><button class="chip" data-value="None">None</button><button class="chip" data-value="[1, 2, 3]">[1, 2, 3]</button></div>
+      <div class="result" id="detectResult" aria-live="polite">Your result will appear here.</div>
+    </div>
+    <div class="panel"><h3>💡 What does type() do?</h3><p>In Python, the built-in <code>type()</code> function tells you the type of a value.</p>
+      <div class="codebox"><span class="line">value = 3.14</span><span class="line">print(type(value))</span><span class="line comment"># &lt;class 'float'&gt;</span></div>
+      <div class="result"><strong>Remember:</strong> <code>3</code> is an integer, but <code>3.0</code> is a float. The decimal point makes a difference!</div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="conversion">
+  <div class="section-head"><div class="kicker">03 / Transform</div><h2>Type conversion lab</h2><p>Python can convert some values from one type to another using functions such as int(), float() and str().</p></div>
+  <div class="panel">
+    <div class="conversion">
+      <div><label for="convertInput">Value to convert</label><input class="input" id="convertInput" value="25"></div>
+      <div class="arrow">→</div>
+      <div><label for="convertType">Convert to</label><select class="select" id="convertType"><option value="int">int()</option><option value="float">float()</option><option value="str">str()</option></select></div>
+    </div>
+    <div class="actions"><button class="btn" id="convertBtn">Convert value</button></div>
+    <div class="result" id="convertResult" aria-live="polite">Choose a value and conversion type, then press Convert value.</div>
+    <p class="hint" style="margin-top:12px">Try converting <code>"abc"</code> to int to see why some conversions fail.</p>
+  </div>
+</section>
+
+<section class="wrap" id="simulator">
+  <div class="section-head"><div class="kicker">04 / Step simulator</div><h2>See type detection step by step</h2><p>Follow how a program reads a value, checks its type, and displays a result. Use Next, Play and Reset to control the demonstration.</p></div>
+  <div class="two-col">
+    <div class="panel">
+      <div class="step-indicator" id="stepLabel">STEP 1 OF 4</div><h3>Python code</h3>
+      <div class="codebox" id="simCode"><span class="line active">value = 3.0</span><span class="line">result = type(value)</span><span class="line">print(result)</span><span class="line comment"># &lt;class 'float'&gt;</span></div>
+      <div class="sim-controls"><button class="btn" id="nextBtn">Next →</button><button class="btn secondary" id="playBtn">▶ Play</button><button class="btn secondary" id="resetBtn">↺ Reset</button></div>
+      <label class="speed">Speed <input type="range" id="speed" min="400" max="2000" step="100" value="1000"><span id="speedValue">1.0s</span></label>
+    </div>
+    <div class="panel"><h3>🖥️ Output console</h3><p id="simExplanation">Step 1: The program stores the value 3.0 in a variable named value.</p><div class="console" id="simConsole">Waiting for the program to run…</div><div class="result" id="simValue"><strong>Current value:</strong> 3.0</div></div>
+  </div>
+</section>
+
+<section class="wrap" id="quiz">
+  <div class="section-head"><div class="kicker">05 / Check yourself</div><h2>25-question knowledge quiz</h2><p>There are 5 parts with 5 questions each. Complete a part, then start another group to practise the next set.</p></div>
+  <div class="panel" style="max-width:720px"><div class="step-indicator" id="quizCount">PART 1 OF 5 · QUESTION 1 OF 5</div><div class="quiz-q" id="quizQuestion">What is the data type of 3.0?</div><div class="options" id="quizOptions"></div><div class="feedback" id="quizFeedback" aria-live="polite"></div><div class="result" id="quizScore" aria-live="polite">Answer all 5 questions to see your score.</div><div class="actions"><button class="btn secondary" id="nextQuiz" disabled>Next question →</button><button class="btn" id="anotherQuiz" hidden>Start another 5-question quiz →</button></div></div>
+</section>
+</main>
+
+<section class="wrap" id="advanced">
+ <div class="section-head"><div class="kicker">06 / Go further</div><h2>Advanced data types</h2><p>Python has more built-in collection and number types. Explore these common examples too.</p></div>
+ <div class="grid">
+  <article class="panel"><div class="type-symbol">( )</div><h3>Tuple</h3><div class="example">(1, 2, 3)</div><p class="hint">An ordered collection that cannot be changed after creation.</p><code>type((1, 2)) → tuple</code></article>
+  <article class="panel"><div class="type-symbol">{ }</div><h3>Set</h3><div class="example">{1, 2, 3}</div><p class="hint">An unordered collection of unique items.</p><code>type({1, 2}) → set</code></article>
+  <article class="panel"><div class="type-symbol">key</div><h3>Dictionary</h3><div class="example">{"name": "Ada"}</div><p class="hint">Stores values as key-value pairs.</p><code>type({"a": 1}) → dict</code></article>
+  <article class="panel"><div class="type-symbol">j</div><h3>Complex</h3><div class="example">2 + 3j</div><p class="hint">Represents numbers with real and imaginary parts.</p><code>type(2 + 3j) → complex</code></article>
+ </div>
+</section>
+
+<section class="wrap" id="playground">
+ <div class="section-head"><div class="kicker">07 / Create</div><h2>Live Python Playground</h2><p>Write a small Python example and run it in this learning playground. It supports beginner examples such as variables, print(), type(), and basic arithmetic.</p></div>
+ <div class="two-col">
+  <div class="panel"><h3>⌨️ Your Python code</h3><textarea class="input" id="pyCode" rows="8" style="width:100%;font-family:ui-monospace,monospace" spellcheck="false">name = "Python"
+age = 25
+print(name)
+print(type(age))</textarea>
+   <div class="v3-actions"><button class="btn" id="runPython">▶ Run code</button><button class="btn secondary" id="clearPython">Clear</button></div>
+   <div class="quick"><button class="chip" data-code='x = 10\nprint(type(x))'>Integer example</button><button class="chip" data-code='word = "Hello"\nprint(type(word))'>String example</button><button class="chip" data-code='price = 3.14\nprint(price)'>Float example</button></div>
+  </div>
+  <div class="panel"><h3>🖥️ Output</h3><p class="v3-small">Output from the learning runner</p><div class="console v3-output" id="pythonOutput" aria-live="polite">Your program output will appear here.</div><p class="v3-small">Learning limitation: this is a lightweight in-browser teaching runner, not a complete Python installation. It supports a small subset of Python syntax and does not execute arbitrary Python packages.</p></div>
+ </div>
+</section>
+
+<section class="wrap" id="memory">
+ <div class="section-head"><div class="kicker">08 / Visualise</div><h2>Variable Memory Visualizer</h2><p>Enter a variable name and value to see them represented as a simple memory card.</p></div>
+ <div class="panel">
+  <div class="v3-grid">
+   <div><label for="memName">Variable name</label><input class="input" id="memName" value="age" placeholder="e.g. age"></div>
+   <div><label for="memValue">Value</label><input class="input" id="memValue" value="20" placeholder='e.g. 20 or "Hello"'></div>
+  </div>
+  <div class="v3-actions"><button class="btn" id="addMemory">Add variable</button><button class="btn secondary" id="clearMemory">Clear visualizer</button></div>
+  <div class="v3-memory" id="memoryCards"><div class="v3-memory-card"><b>age</b><p>20</p><span class="v3-tag">int</span></div></div>
+ </div>
+</section>
+
+<section class="wrap" id="errors">
+ <div class="section-head"><div class="kicker">09 / Debug</div><h2>Error Detective</h2><p>Choose a common beginner mistake and learn why Python reports an error.</p></div>
+ <div class="panel">
+  <label for="errorChoice">Choose an example</label>
+  <select class="select" id="errorChoice">
+   <option value="mix">"20" + 5 — mixing string and integer</option>
+   <option value="name">pritn("Hello") — misspelled function</option>
+   <option value="quote">message = "Hello — missing closing quote</option>
+   <option value="convert">int("hello") — invalid number conversion</option>
+  </select>
+  <div class="codebox" id="errorCode" style="margin-top:12px">"20" + 5</div>
+  <div class="result" id="errorExplanation"><strong>TypeError:</strong> Python cannot directly add a string and an integer. Convert one value first, for example int("20") + 5.</div>
+ </div>
+</section>
+
+<section class="wrap" id="flashcards">
+ <div class="section-head"><div class="kicker">10 / Revise</div><h2>Flashcard Mode</h2><p>Test your memory. Think of the answer, then flip the card.</p></div>
+ <div class="panel">
+  <div class="v3-flash" id="flashCard" role="button" tabindex="0" aria-label="Flip flashcard"><div><span class="v3-tag" id="flashLabel">QUESTION 1</span><p id="flashPrompt">Which type stores whole numbers?</p><strong id="flashAnswer" hidden>int</strong><p class="v3-small" id="flashHint">Tap the card to reveal the answer</p></div></div>
+  <div class="v3-actions"><button class="btn secondary" id="flashPrev">← Previous</button><button class="btn" id="flashFlip">Flip card</button><button class="btn secondary" id="flashNext">Next →</button></div>
+ </div>
+</section>
+
+<section class="wrap" id="progress">
+ <div class="section-head"><div class="kicker">11 / Your learning</div><h2>Progress Dashboard</h2><p>Your activity on this device is summarised here. Progress is stored locally in this browser.</p></div>
+ <div class="v3-grid">
+  <div class="panel"><h3>Quiz performance</h3><div class="stat"><b id="progressScore">0</b><small>correct answers recorded in this visit</small></div><div class="v3-progress"><span id="progressBar"></span></div><p class="v3-small" id="progressText">Complete quiz questions to build your score.</p></div>
+  <div class="panel"><h3>Learning checklist</h3><p class="v3-small">Tick a topic when you feel confident with it.</p>
+   <label><input type="checkbox" class="topicDone"> Basic data types</label><br>
+   <label><input type="checkbox" class="topicDone"> Type detection</label><br>
+   <label><input type="checkbox" class="topicDone"> Type conversion</label><br>
+   <label><input type="checkbox" class="topicDone"> Advanced data types</label><br>
+   <label><input type="checkbox" class="topicDone"> Variables and memory</label><br>
+   <div class="v3-progress"><span id="topicBar"></span></div><p class="v3-small" id="topicText">0 of 5 topics completed</p>
+  </div>
+ </div>
+</section>
+
+<footer class="footer"><div class="wrap"><strong>PyType Explorer</strong> · Version 3.1 · An interactive beginner-friendly Python data types learning project.<br>Built with HTML, CSS and JavaScript. Educational examples are simplified for learning.</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+document.querySelectorAll('.type-card').forEach(card=>{
+  const flip=()=>card.classList.toggle('flipped');
+  card.addEventListener('click',flip);
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}});
+});
+function parseValue(raw){
+  const s=raw.trim();
+  if(!s) throw Error('Please enter a value first.');
+  if(s==='True'||s==='False') return {type:'bool',value:s,display:s};
+  if(s==='None') return {type:'NoneType',value:s,display:s};
+  if(/^(['"]).*\1$/s.test(s)) return {type:'str',value:s.slice(1,-1),display:s};
+  if((s.startsWith('\"') && !s.endsWith('\"')) || (s.startsWith("'") && !s.endsWith("'"))) throw Error('Your quoted text is missing its closing quotation mark.');
+  if(/^[+-]?\d+$/.test(s)) return {type:'int',value:Number(s),display:s};
+  if(/^[+-]?(?:\d+\.\d*|\d*\.\d+)(?:[eE][+-]?\d+)?$/.test(s)||/^[+-]?\d+[eE][+-]?\d+$/.test(s)) return {type:'float',value:Number(s),display:s};
+  if(/^\[.*\]$/s.test(s)) return {type:'list',value:s,display:s};
+  if(!/[\[\]{}]/.test(s)) return {type:'str',value:s,display:'\"' + s + '\"'};
+  throw Error('This value is not recognised. Check the brackets or try ordinary text, a number, True, False or None.');
+}
+$('detectBtn').addEventListener('click',()=>{
+  try{const r=parseValue($('detectInput').value);$('detectResult').innerHTML=`Detected type: <strong>${r.type}</strong><br>Python expression: <code>type(${escapeHtml(r.display)})</code><br>Python result: <code>&lt;class '${r.type}'&gt;</code>`;}
+  catch(e){$('detectResult').innerHTML=`<strong style="color:var(--red)">Input not recognised</strong><br>${escapeHtml(e.message)}`;}
+});
+$('detectInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('detectBtn').click();});
+document.querySelectorAll('[data-value]').forEach(b=>b.addEventListener('click',()=>{$('detectInput').value=b.dataset.value;$('detectBtn').click();}));
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+$('convertBtn').addEventListener('click',()=>{
+ const raw=$('convertInput').value.trim(),target=$('convertType').value;
+ try{
+  const parsed=parseValue(raw);let result,shown;
+  if(target==='str'){result=parsed.type==='str'?parsed.value:String(parsed.value);shown='"'+result+'"';}
+  else if(target==='int'){
+   if(parsed.type==='str'&&!/^[+-]?\d+$/.test(parsed.value.trim()))throw Error("invalid literal for int() with base 10");
+   if(parsed.type==='list'||parsed.type==='NoneType'||parsed.type==='bool')throw Error("this example cannot be converted to int()");
+   result=Math.trunc(Number(parsed.value));if(!Number.isFinite(result))throw Error('Value cannot be converted to int');shown=String(result);
+  }else{
+   if(parsed.type==='str'&&parsed.value.trim()==='')throw Error("could not convert string to float");
+   if(parsed.type==='list'||parsed.type==='NoneType')throw Error("this example cannot be converted to float()");
+   result=Number(parsed.value);if(!Number.isFinite(result))throw Error('could not convert value to float');shown=String(result);
+  }
+  $('convertResult').innerHTML=`<strong style="color:var(--green)">Conversion successful</strong><br>Result: <code>${escapeHtml(shown)}</code><br>New type: <strong>${target}</strong><br>Python example: <code>${target}(${escapeHtml(raw)})</code>`;
+ }catch(e){$('convertResult').innerHTML=`<strong style="color:var(--red)">ValueError / conversion error</strong><br>${escapeHtml(e.message)}<br><span class="hint">Python cannot convert every value into every type.</span>`;}
+});
+const steps=[
+ {line:0,ex:'Step 1: The program stores the value 3.0 in a variable named value.',out:'Value stored: 3.0',val:'3.0',code:'value = 3.0'},
+ {line:1,ex:'Step 2: The type() function checks the kind of value stored in value.',out:'Checking type(value)…',val:'3.0',code:'result = type(value)'},
+ {line:2,ex:'Step 3: The print() function displays the detected type.',out:"<class 'float'>",val:'3.0 → float',code:'print(result)'},
+ {line:3,ex:'Step 4: The comment shows the expected Python output. A decimal value such as 3.0 is a float.',out:"Program finished.\n<class 'float'>",val:'Detected type: float',code:"# <class 'float'>"}
+];
+let step=0,timer=null;
+function renderStep(){
+ $('stepLabel').textContent=`STEP ${step+1} OF ${steps.length}`;
+ $('simExplanation').textContent=steps[step].ex;
+ $('simConsole').textContent=step===0?'Waiting for the program to run…':steps[step].out;
+ $('simValue').innerHTML='<strong>Current value:</strong> '+escapeHtml(steps[step].val);
+ $('simCode').innerHTML=steps.map((s,i)=>`<span class="line ${i===step?'active':''}">${escapeHtml(s.code)}</span>`).join('');
+ $('nextBtn').disabled=step===steps.length-1;
+}
+function stopPlay(){if(timer){clearInterval(timer);timer=null;}$('playBtn').textContent='▶ Play';}
+$('nextBtn').addEventListener('click',()=>{stopPlay();if(step<steps.length-1){step++;renderStep();}});
+$('resetBtn').addEventListener('click',()=>{stopPlay();step=0;renderStep();});
+$('playBtn').addEventListener('click',()=>{
+ if(timer){stopPlay();return;}
+ if(step===steps.length-1)step=0;
+ $('playBtn').textContent='Ⅱ Pause';renderStep();
+ timer=setInterval(()=>{if(step<steps.length-1){step++;renderStep();}else stopPlay();},Number($('speed').value));
+});
+$('speed').addEventListener('input',()=>{$('speedValue').textContent=(Number($('speed').value)/1000).toFixed(1)+'s';if(timer){stopPlay();$('playBtn').click();}});
+renderStep();
+
+const quizGroups = [
+ [
+  {q:'What is the data type of 3.0?',o:['int','float','str'],a:1,why:'3.0 has a decimal point, so it is a float.'},
+  {q:'Which type stores text such as Hello?',o:['bool','str','int'],a:1,why:'Text is stored as a string (str).'},
+  {q:'Which two values belong to the bool type?',o:['Yes and No','1 and 0','True and False'],a:2,why:'Python Boolean values are True and False.'},
+  {q:'What is the data type of 25?',o:['int','float','list'],a:0,why:'25 is a whole number, so it is an int.'},
+  {q:'What is the type of None in Python?',o:['bool','NoneType','str'],a:1,why:'The special value None has the type NoneType.'}
+ ],
+ [
+  {q:'Which brackets are used to create a list?',o:['( )','{ }','[ ]'],a:2,why:'Lists are written using square brackets.'},
+  {q:'What is the type of "42"?',o:['int','str','float'],a:1,why:'Quotation marks make 42 text, so it is a string.'},
+  {q:'Which value is a float?',o:['7','7.0','"7.0"'],a:1,why:'7.0 is a number with a decimal point.'},
+  {q:'Which of these is a Boolean value?',o:['"False"','False','None'],a:1,why:'False without quotation marks is a Boolean value.'},
+  {q:'What does type(10) identify?',o:['int','str','float'],a:0,why:'The type() function identifies 10 as an int.'}
+ ],
+ [
+  {q:'Which is the Python data type for ordinary text?',o:['str','bool','int'],a:0,why:'Python uses str for text.'},
+  {q:'Which data type can store several items in order and be changed?',o:['list','int','bool'],a:0,why:'A list is ordered and mutable (changeable).'},
+  {q:'What is the result type of int(4.8)?',o:['float','str','int'],a:2,why:'int() converts the value to an integer.'},
+  {q:'What is the type of -12?',o:['int','float','NoneType'],a:0,why:'Negative whole numbers are still integers.'},
+  {q:'Which value represents the absence of a value?',o:['False','None','0.0'],a:1,why:'None is Python’s special value for no value.'}
+ ],
+ [
+  {q:'What is the type of [1, 2, 3]?',o:['tuple','list','str'],a:1,why:'Square brackets with items create a list.'},
+  {q:'Which expression creates a string containing the word Python?',o:['Python','"Python"','Python()'],a:1,why:'A Python string literal is written inside quotation marks.'},
+  {q:'What does float("3.5") produce?',o:['3.5 as a float','"3.5" as a string','An int'],a:0,why:'float() converts numeric text into a floating-point value.'},
+  {q:'Which statement about bool is correct?',o:['It stores any text','It represents True or False','It stores decimal numbers'],a:1,why:'The bool type represents logical truth values.'},
+  {q:'What is the type of 0?',o:['float','int','str'],a:1,why:'Zero without a decimal point is an integer.'}
+ ],
+ [
+  {q:'Which value is a string even though it looks like a number?',o:['100','100.0','"100"'],a:2,why:'Quotation marks mean the value is text.'},
+  {q:'What is the type of 2.0e3?',o:['int','float','str'],a:1,why:'Scientific notation with an exponent is a float.'},
+  {q:'Which function checks the type of a value?',o:['print()','type()','input()'],a:1,why:'type() returns the type of an object.'},
+  {q:'What does str(25) produce?',o:['25 as text','25 as an integer','25.0 as a float'],a:0,why:'str() converts the number into a string.'},
+  {q:'Which of these is NOT one of the six types introduced on this website?',o:['float','bool','dictionary'],a:2,why:'This explorer introduces int, float, str, bool, NoneType and list.'}
+ ]
+];
+let groupIndex = 0;
+let questionIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+function renderQuiz(){
+ const q = quizGroups[groupIndex][questionIndex];
+ $('quizCount').textContent = `PART ${groupIndex+1} OF 5 · QUESTION ${questionIndex+1} OF 5`;
+ $('quizQuestion').textContent = q.q;
+ $('quizFeedback').textContent = '';
+ $('quizScore').textContent = `Score so far: ${quizScore} / ${questionIndex}`;
+ $('nextQuiz').disabled = true;
+ $('nextQuiz').hidden = false;
+ $('nextQuiz').textContent = questionIndex === 4 ? 'Finish part →' : 'Next question →';
+ $('anotherQuiz').hidden = true;
+ quizAnswered = false;
+ $('quizOptions').innerHTML = q.o.map((o,i)=>`<button class="option" data-i="${i}">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</button>`).join('');
+ document.querySelectorAll('.option').forEach(b=>b.addEventListener('click',()=>{
+  if(quizAnswered)return;
+  quizAnswered = true;
+  const selected = Number(b.dataset.i);
+  document.querySelectorAll('.option').forEach((el,j)=>{el.disabled=true;if(j===q.a)el.classList.add('correct');});
+  if(selected === q.a) quizScore++;
+  else b.classList.add('wrong');
+  $('quizFeedback').textContent = (selected === q.a ? 'Correct! ' : 'Not quite. ') + q.why;
+  $('quizScore').textContent = `Score so far: ${quizScore} / ${questionIndex+1}`;
+  $('nextQuiz').disabled = false;
+ }));
+}
+$('nextQuiz').addEventListener('click',()=>{
+ if(!quizAnswered)return;
+ if(questionIndex < 4){ questionIndex++; renderQuiz(); }
+ else{
+  $('quizCount').textContent = `PART ${groupIndex+1} OF 5 · COMPLETED`;
+  $('quizQuestion').textContent = `You completed Part ${groupIndex+1}!`;
+  $('quizOptions').innerHTML = '';
+  $('quizFeedback').textContent = 'Well done — you have finished this set of five questions.';
+  $('quizScore').innerHTML = `<strong>Your score: ${quizScore} / 5</strong>`;
+  $('nextQuiz').hidden = true;
+  $('anotherQuiz').hidden = false;
+  $('anotherQuiz').textContent = groupIndex === 4 ? 'Restart with Part 1 →' : `Start Part ${groupIndex+2} →`;
+ }
+});
+$('anotherQuiz').addEventListener('click',()=>{
+ groupIndex = (groupIndex + 1) % quizGroups.length;
+ questionIndex = 0;
+ quizScore = 0;
+ renderQuiz();
+});
+renderQuiz();
+
+// Version 3 additions
+(function(){
+ const $v=id=>document.getElementById(id);
+ // Theme switch
+ $v('themeToggle').addEventListener('click',()=>{
+  document.body.classList.toggle('light-mode');
+  const light=document.body.classList.contains('light-mode');
+  $v('themeToggle').textContent=light?'☾ Dark mode':'☀ Light mode';
+ });
+ // Extend type detector to recognise tuple, set, dict and complex literals.
+ const originalParseValue=parseValue;
+ window.parseValue=function(raw){
+  const s=raw.trim();
+  if(/^[+-]?\d+(?:\.\d+)?[+-]\d+(?:\.\d+)?j$/.test(s))return {type:'complex',value:s,display:s};
+  if(/^\{.*\}$/s.test(s)){
+   if(s.trim()==='{}')return {type:'dict',value:s,display:s};
+   return {type:s.includes(':')?'dict':'set',value:s,display:s};
+  }
+  if(/^\(.*\)$/s.test(s))return {type:'tuple',value:s,display:s};
+  return originalParseValue(raw);
+ };
+ // Rebind detector to the extended parser.
+ $v('detectBtn').addEventListener('click',()=>{
+  try{const r=window.parseValue($v('detectInput').value);$v('detectResult').innerHTML=`Detected type: <strong>${r.type}</strong><br>Python expression: <code>type(${escapeHtml(r.display)})</code><br>Python result: <code>&lt;class '${r.type}'&gt;</code>`;}
+  catch(e){$v('detectResult').innerHTML=`<strong style="color:var(--red)">Input not recognised</strong><br>${escapeHtml(e.message)}`;}
+ });
+ // Simple educational Python runner (subset only).
+ function runMiniPython(source){
+  const vars={};const output=[];
+  const getVal=expr=>{
+   const x=expr.trim();
+   if(Object.prototype.hasOwnProperty.call(vars,x))return vars[x];
+   if(x==='True')return true;if(x==='False')return false;if(x==='None')return null;
+   if(/^(['"]).*\1$/s.test(x))return x.slice(1,-1);
+   if(/^[+-]?\d+$/.test(x))return Number.parseInt(x,10);
+   if(/^[+-]?(?:\d+\.\d*|\d*\.\d+)$/.test(x))return Number(x);
+   if(/^\[.*\]$/.test(x))return x;
+   if(/^[\w]+$/.test(x))throw Error("NameError: name '"+x+"' is not defined");
+   const arithmetic=x.match(/^(.+?)\s*([+*/-])\s*(.+)$/);
+   if(arithmetic){const a=getVal(arithmetic[1]),b=getVal(arithmetic[3]),op=arithmetic[2];if(op==='+'&&(typeof a==='string'||typeof b==='string')){if(typeof a==='string'&&typeof b==='string')return a+b;throw Error("TypeError: can only concatenate str (not non-string) to str");}if(typeof a!=='number'||typeof b!=='number')throw Error('TypeError: arithmetic requires numeric values in this playground');return op==='+'?a+b:op==='-'?a-b:op==='*'?a*b:a/b;}
+   throw Error('SyntaxError: unsupported expression in this beginner playground: '+x);
+  };
+  const pyType=v=>v===null?'NoneType':Array.isArray(v)?'list':typeof v==='boolean'?'bool':typeof v==='number'?(Number.isInteger(v)?'int':'float'):typeof v==='string'?'str':'object';
+  source.split(/\r?\n/).forEach((line,index)=>{
+   const s=line.trim();if(!s||s.startsWith('#'))return;
+   try{
+    const assignment=s.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/);
+    if(assignment){vars[assignment[1]]=getVal(assignment[2]);return;}
+    const print=s.match(/^print\((.*)\)$/);
+    if(print){const expr=print[1].trim();const typ=expr.match(/^type\((.+)\)$/);if(typ){const v=getVal(typ[1]);output.push("<class '"+pyType(v)+"'>");}else output.push(String(getVal(expr)));return;}
+    throw Error('SyntaxError: this learning runner supports assignments and print(...) statements.');
+   }catch(e){throw Error('Line '+(index+1)+': '+e.message);}
+  });
+  return output.length?output.join('\n'):'Program finished successfully (no printed output).';
+ }
+ $v('runPython').addEventListener('click',()=>{try{$v('pythonOutput').textContent=runMiniPython($v('pyCode').value);}catch(e){$v('pythonOutput').textContent='❌ '+e.message;}});
+ $v('clearPython').addEventListener('click',()=>{$v('pyCode').value='';$v('pythonOutput').textContent='Editor cleared.';});
+ document.querySelectorAll('[data-code]').forEach(b=>b.addEventListener('click',()=>{$v('pyCode').value=b.dataset.code;$v('pythonOutput').textContent='Example loaded. Press Run code.';}));
+ // Memory cards
+ let memoryItems=[];
+ function renderMemory(){
+  $v('memoryCards').innerHTML=memoryItems.length?memoryItems.map(item=>`<div class="v3-memory-card"><b>${escapeHtml(item.name)}</b><p>${escapeHtml(item.value)}</p><span class="v3-tag">${item.type}</span></div>`).join(''):'<p class="v3-small">No variables yet. Add one above.</p>';
+ }
+ $v('addMemory').addEventListener('click',()=>{
+  const name=$v('memName').value.trim(),raw=$v('memValue').value.trim();
+  if(!/^[A-Za-z_]\w*$/.test(name)){alert('Use a valid Python variable name, such as age or user_name.');return;}
+  try{const v=window.parseValue(raw);memoryItems.push({name,value:raw,type:v.type});renderMemory();}catch(e){alert(e.message);}
+ });
+ $v('clearMemory').addEventListener('click',()=>{memoryItems=[];renderMemory();});
+ // Error detective
+ const errorExamples={
+  mix:{code:'"20" + 5',text:'TypeError: Python cannot directly add a string and an integer. Convert one value first, for example int("20") + 5.'},
+  name:{code:'pritn("Hello")',text:'NameError: the name pritn is not defined. The built-in function is spelled print().'},
+  quote:{code:'message = "Hello',text:'SyntaxError: the string is missing its closing quotation mark. Write message = "Hello".'},
+  convert:{code:'int("hello")',text:'ValueError: the text hello is not a valid whole number. int() can convert numeric text such as int("25").'}
+ };
+ $v('errorChoice').addEventListener('change',()=>{const e=errorExamples[$v('errorChoice').value];$v('errorCode').textContent=e.code;$v('errorExplanation').innerHTML='<strong>Explanation:</strong> '+escapeHtml(e.text);});
+ // Flashcards
+ const flashcards=[
+  ['Which type stores whole numbers?','int'],
+  ['Which type stores decimal numbers?','float'],
+  ['Which type stores text?','str'],
+  ['Which type represents True or False?','bool'],
+  ['What is the type of None?','NoneType'],
+  ['Which collection uses square brackets?','list'],
+  ['Which collection cannot be changed after creation?','tuple'],
+  ['Which collection stores unique items?','set'],
+  ['Which type stores key-value pairs?','dict'],
+  ['Which function checks an object type?','type()']
+ ];
+ let flashIndex=0,flashShown=false;
+ function renderFlash(){const f=flashcards[flashIndex];$v('flashLabel').textContent=`CARD ${flashIndex+1} OF ${flashcards.length}`;$v('flashPrompt').textContent=f[0];$v('flashAnswer').textContent=f[1];$v('flashAnswer').hidden=!flashShown;$v('flashHint').textContent=flashShown?'Answer revealed':'Tap the card to reveal the answer';}
+ function flipFlash(){flashShown=!flashShown;renderFlash();}
+ $v('flashCard').addEventListener('click',flipFlash);$v('flashCard').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flipFlash();}});
+ $v('flashFlip').addEventListener('click',flipFlash);
+ $v('flashPrev').addEventListener('click',()=>{flashIndex=(flashIndex+flashcards.length-1)%flashcards.length;flashShown=false;renderFlash();});
+ $v('flashNext').addEventListener('click',()=>{flashIndex=(flashIndex+1)%flashcards.length;flashShown=false;renderFlash();});
+ renderFlash();
+ // Progress checklist saved locally when browser storage is available.
+ const checks=[...document.querySelectorAll('.topicDone')];
+ function updateTopics(){const count=checks.filter(c=>c.checked).length;$v('topicBar').style.width=(count/checks.length*100)+'%';$v('topicText').textContent=count+' of '+checks.length+' topics completed';}
+ try{checks.forEach((c,i)=>{c.checked=localStorage.getItem('pytype-topic-'+i)==='1';c.addEventListener('change',()=>{localStorage.setItem('pytype-topic-'+i,c.checked?'1':'0');updateTopics();});});}catch(e){}
+ updateTopics();
+ // Quiz points dashboard: reflect the current visit's score counter if present.
+ const scoreNode=$v('quizScore');
+ const scoreObserver=new MutationObserver(()=>{const m=scoreNode.textContent.match(/Score so far:\s*(\d+)\s*\/\s*(\d+)/);if(m){$v('progressScore').textContent=m[1];$v('progressBar').style.width=(Number(m[1])/Math.max(1,Number(m[2]))*100)+'%';$v('progressText').textContent=m[1]+' correct out of '+m[2]+' answered in the current quiz part.';}});
+ scoreObserver.observe(scoreNode,{childList:true,subtree:true,characterData:true});
+})();
+
+</script>
+</body>
+</html>
